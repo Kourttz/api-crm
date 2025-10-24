@@ -1,0 +1,103 @@
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_DRIVER: overlay2
+  DOCKER_BUILDKIT: "1"
+
+default:
+  image: docker:24
+  services:
+    - name: docker:24-dind
+      command: ["--tls=false", "--insecure-registry=172.32.1.71:5050"]
+
+stages:
+  - build
+
+build_dev:
+  stage: build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "dev" && $CI_PIPELINE_SOURCE == "push"'
+  script:
+    - echo "🔑 Autenticando no Container Registry..."
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
+
+    - echo "🏗️ Gerando imagem para DEV..."
+    - >
+      docker build
+      --pull
+      --build-arg PORT=$PORT
+      --build-arg DB_HOST=$DB_HOST
+      --build-arg DB_PORT=$DB_PORT
+      --build-arg DB_USERNAME=$DB_USERNAME
+      --build-arg DB_PASSWORD=$DB_PASSWORD
+      --build-arg DB_DATABASE=$DB_DATABASE
+      --build-arg JWT_SECRET=$JWT_SECRET
+      -t "$CI_REGISTRY_IMAGE:dev" .
+
+    - echo "🚀 Realizando push da imagem..."
+    - docker push "$CI_REGISTRY_IMAGE:dev"
+
+  artifacts:
+    when: always
+    paths:
+      - image-tag.txt
+    expire_in: 1 week
+  after_script:
+    - echo "dev" > image-tag.txt
+
+build_hom:
+  stage: build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "hom" && $CI_PIPELINE_SOURCE == "push"'
+  script:
+    - echo "🔑 Autenticando no Container Registry..."
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
+    - echo "🏗️ Gerando imagem para HOM..."
+    - >
+      docker build
+      --pull
+      --build-arg PORT=$PORT
+      --build-arg DB_HOST=$DB_HOST
+      --build-arg DB_PORT=$DB_PORT
+      --build-arg DB_USERNAME=$DB_USERNAME
+      --build-arg DB_PASSWORD=$DB_PASSWORD
+      --build-arg DB_DATABASE=$DB_DATABASE
+      --build-arg JWT_SECRET=$JWT_SECRET
+      -t "$CI_REGISTRY_IMAGE:hom" .
+    - docker push "$CI_REGISTRY_IMAGE:hom"
+  artifacts:
+    when: always
+    paths:
+      - image-tag.txt
+    expire_in: 1 week
+  after_script:
+    - echo "hom" > image-tag.txt
+
+build_prod:
+  stage: build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE == "push"'
+  script:
+    - echo "🔑 Autenticando no Container Registry..."
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_JOB_TOKEN" "$CI_REGISTRY"
+    - echo "🏗️ Gerando imagem para PROD..."
+    - >
+      docker build
+      --pull
+      --build-arg PORT=$PORT
+      --build-arg DB_HOST=$DB_HOST
+      --build-arg DB_PORT=$DB_PORT
+      --build-arg DB_USERNAME=$DB_USERNAME
+      --build-arg DB_PASSWORD=$DB_PASSWORD
+      --build-arg DB_DATABASE=$DB_DATABASE
+      --build-arg JWT_SECRET=$JWT_SECRET
+      -t "$CI_REGISTRY_IMAGE:latest" .
+    - docker push "$CI_REGISTRY_IMAGE:latest"
+  artifacts:
+    when: always
+    paths:
+      - image-tag.txt
+    expire_in: 1 week
+  after_script:
+    - echo "latest" > image-tag.txt

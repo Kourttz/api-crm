@@ -17,5 +17,5 @@ export class Servicos {
 
     // Relação com a Tabela de Junção ServicoLead
     @OneToMany(() => ServicoLead, servicoLead => servicoLead.servico)
-    servicoLeads: ServicoLead[];
+    servicoLead: ServicoLead[];
 }

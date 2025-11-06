@@ -41,6 +41,20 @@ export class ContatosController {
     };
   }
 
+  @Get(':coContato')
+  @ApiOperation({ summary: 'Obtém um Contato por ID' })
+  @ApiParam({ name: 'coContato', type: Number, description: 'ID do Contato' })
+  async obterPorId(@Req() request: Request, @Param('coContato') id: number): Promise<ResponseDto<Contatos>> {
+    const contato = await this.contatosService.obterContatoPorId(id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Contato obtido com sucesso',
+      timestamp: getGMT3Timestamp(),
+      path: request.url,
+      data: contato,
+    };
+  }
+
   @Post()
   @ApiOperation({ summary: 'Cria um novo Contato' })
   @ApiBody({

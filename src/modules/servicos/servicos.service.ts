@@ -20,6 +20,25 @@ export class ServicosService {
 
   /**
    * 
+   * @param id ID da serviço a ser obtida
+   * @returns 
+   */
+  async obterServicoPorId(id: number): Promise<Servicos> {
+    const servico = await this.servicosRepository.findOneBy({ coServico: id });
+
+    /* Verifica se a serviço foi encontrada */
+    if (!servico) {
+      throw new HttpException(
+        'Serviço não encontrado',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return servico;
+  }
+
+  /**
+   * 
    * @param dados Dados para criar um novo serviço
    * @returns 
    */   

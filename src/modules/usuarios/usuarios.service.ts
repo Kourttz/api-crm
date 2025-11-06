@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Usuarios } from './usuarios.entity';
@@ -18,6 +18,26 @@ export class UsuariosService {
    */
   async listarUsuarios(): Promise<Usuarios[]> {
     return this.UsuariosRepository.find();
+  }
+
+  /**
+   * 
+   * @param id ID do usuário a ser obtido
+   * @returns 
+   */
+  async obterUsuarioPorId(id: number): Promise<Usuarios> {
+    
+    const usuario = await this.UsuariosRepository.findOneBy({ coUsuario: id });
+
+    /* Verifica se o usuário foi encontrado */
+    if (!usuario) {
+      throw new HttpException(
+        'Usuário não encontrado',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return usuario;
   }
  
 }

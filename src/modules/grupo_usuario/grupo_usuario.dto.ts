@@ -1,4 +1,4 @@
-import { IsArray, IsNumber, ArrayNotEmpty, IsOptional } from 'class-validator';
+import { IsArray, IsNumber, ArrayNotEmpty, IsOptional, IsBoolean, Min} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 
@@ -15,6 +15,14 @@ export class CoUsuariosDto {
   coUsuarios: number[] = [];
 }
 
+export class IdGrupoListUsuariosDto {
+  @IsNumber()
+  @Min(1)
+  coGrupo: number;
+
+  @IsBoolean()
+  isRequired: boolean;
+}
 
 export class GrupoUsuarioResponseDto {
     id: string;

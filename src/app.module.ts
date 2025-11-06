@@ -9,6 +9,7 @@ import { ContatosModule } from './modules/contatos/contatos.module';
 import { ServicosModule } from './modules/servicos/servicos.module';
 import { UsuariosModule } from './modules/usuarios/usuarios.module';
 import { GrupoUsuarioModule } from './modules/grupo_usuario/grupo_usuario.module';
+import { AtribuicoesModule } from './modules/atribuicoes/atribuicoes.module';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { GrupoUsuarioModule } from './modules/grupo_usuario/grupo_usuario.module
       entities: [__dirname + '/**/*.entity{.js,.ts}'],
       migrations: [__dirname + '/migrations/*{.js,.ts}']
     }),
-    
+
     LeadsModule,
     GruposModule,
     OrigensModule,
@@ -33,6 +34,7 @@ import { GrupoUsuarioModule } from './modules/grupo_usuario/grupo_usuario.module
     ContatosModule,
     ServicosModule,
     UsuariosModule,
+    AtribuicoesModule,
     GrupoUsuarioModule
   ],
   controllers: [],

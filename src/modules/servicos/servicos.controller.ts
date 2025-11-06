@@ -42,6 +42,20 @@ export class ServicosController {
     };
   }
 
+  @Get(':coServico')
+  @ApiOperation({ summary: 'Obtém um Serviço por ID' })
+  @ApiParam({ name: 'coServico', type: Number, description: 'ID do Serviço' })
+  async obterPorId(@Req() request: Request, @Param('coServico') id: number): Promise<ResponseDto<Servicos>> {
+    const servico = await this.servicosService.obterServicoPorId(id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Serviço obtido com sucesso',
+      timestamp: getGMT3Timestamp(),
+      path: request.url,
+      data: servico,
+    };
+  }
+
   @Post()
   @ApiOperation({ summary: 'Cria um novo Serviço' })
   @ApiBody({

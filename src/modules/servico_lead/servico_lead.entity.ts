@@ -24,11 +24,11 @@ export class ServicoLead {
   dtRegistro: Date;
   
   // Relações ManyToOne
-  @ManyToOne(() => Servicos, servico => servico.servicoLeads)
+  @ManyToOne(() => Servicos, servico => servico.servicoLead)
   @JoinColumn({ name: 'co_servico' })
   servico: Servicos;
 
-  @ManyToOne(() => Leads, lead => lead.servicoLeads)
+  @ManyToOne(() => Leads, lead => lead.servicoLead)
   @JoinColumn({ name: 'co_lead' })
   lead: Leads;
 }

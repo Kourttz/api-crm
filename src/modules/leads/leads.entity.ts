@@ -11,6 +11,9 @@ import {
 import { Contatos } from '../contatos/contatos.entity'; 
 import { Origens } from '../origens/origens.entity'; 
 import { ServicoLead } from '../servico_lead/servico_lead.entity'; 
+import { Usuarios } from '../usuarios/usuarios.entity';
+import { EmpresaContato } from '../empresa_contato/empresa_contato.entity';
+import { Atribuicoes } from '../atribuicoes/atribuicoes.entity';
 
 @Entity({ name: 'tb_leads' })
 export class Leads {
@@ -58,5 +61,26 @@ export class Leads {
 
   // Servicos (OneToMany através da tabela de junção)
   @OneToMany(() => ServicoLead, servicoLead => servicoLead.lead)
-  servicoLeads: ServicoLead[];
+  @JoinColumn({ name: 'co_lead' })
+  servicoLead: ServicoLead[];
+
+  // Usuário que criou a Lead (ManyToOne)
+  @ManyToOne(() => Usuarios, usuario => usuario.leadsCreated)
+  @JoinColumn({ name: 'co_usuario_create' })
+  usuarioCreate: Usuarios;
+
+  // Usuário que editou a Lead (ManyToOne)
+  @ManyToOne(() => Usuarios, usuario => usuario.leadsEdited)
+  @JoinColumn({ name: 'co_usuario_edit' })
+  usuarioEdit: Usuarios;
+
+  //Empresa Contato (OneToMany)
+  @OneToMany(() => EmpresaContato, empresaContato => empresaContato.lead)
+  @JoinColumn({ name: 'co_lead' })
+  empresaContatos: EmpresaContato[];
+
+  //Atribuições (ManyToOne)
+  @ManyToOne(() => Atribuicoes, atribuicao => atribuicao.coLead)
+  @JoinColumn({ name: 'co_lead' })
+  atribuicoes: Atribuicoes[];
 }

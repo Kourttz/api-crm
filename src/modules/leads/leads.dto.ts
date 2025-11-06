@@ -65,6 +65,12 @@ export class AtualizarLeadDto {
     @IsNumber()
     @Min(1)
     coUsuarioEdit: number; 
+
+    @IsOptional()
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => ServicoLeadDto)
+    servicos?: ServicoLeadDto[];
 }
 
 export class DeletarLeadDto {

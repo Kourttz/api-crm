@@ -42,6 +42,20 @@ export class OrigensController {
     };
   }
 
+  @Get(':coOrigem')
+  @ApiOperation({ summary: 'Obtém uma Origem por ID' })
+  @ApiParam({ name: 'coOrigem', type: Number, description: 'ID da Origem' })
+  async obterPorId(@Req() request: Request, @Param('coOrigem') id: number): Promise<ResponseDto<Origens>> {
+    const origem = await this.origensService.obterOrigemPorId(id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Origem obtida com sucesso',
+      timestamp: getGMT3Timestamp(),
+      path: request.url,
+      data: origem,
+    };
+  }
+
   @Post()
   @ApiOperation({ summary: 'Cria uma nova Origem' })
   @ApiBody({

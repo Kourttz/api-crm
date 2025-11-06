@@ -8,7 +8,7 @@ export default function initSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('API CRM')
     .setDescription('API para gerenciamento de clientes e leads')
-    .setVersion('1.0')
+    .setVersion('2.0')
     .addServer(apiPrefix)
     .build();
 

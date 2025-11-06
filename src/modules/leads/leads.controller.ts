@@ -17,7 +17,6 @@ import {
 import { LeadsService } from './leads.service';
 import { Leads } from './leads.entity';
 import { ResponseDto } from '../../common/filters/response.dto';
-import { HttpExceptionFilter } from '../../common/filters/http-exception.filter';
 import { getGMT3Timestamp } from '../../common/utils/timestamp.util';
 import { Request } from 'express';
 
@@ -33,6 +32,24 @@ export class LeadsController {
     return {
       statusCode: HttpStatus.OK,
       message: 'Leads listadas com sucesso',
+      timestamp: getGMT3Timestamp(),
+      path: request.url,
+      data: leads,
+    };
+  }
+
+  @Get(':coLead')
+  @ApiOperation({ summary: 'Obtém uma Lead por ID' })
+  @ApiParam({ name: 'coLead', type: Number, description: 'ID da Lead' })
+  async obterPorId( @Param() params: { coLead: number },
+    @Req() request: Request,
+  ): Promise<ResponseDto<Leads>> {
+    
+    const leads = await this.leadsService.obterLeadPorId(params.coLead);
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Lead encontrado com sucesso',
       timestamp: getGMT3Timestamp(),
       path: request.url,
       data: leads,

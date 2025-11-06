@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn, OneToOne, OneToMany } from 'typeorm';
+import { GrupoUsuario } from '../grupo_usuario/grupo_usuario.entity';
 
 @Entity({ name: 'gestao.tb_usuarios' })
 export class Usuarios {
@@ -57,5 +58,16 @@ export class Usuarios {
     nullable: false
   })
   coPerfil: number;
+
+  @OneToMany(() => Usuarios, usuario => usuario.leadsCreated)
+  @JoinColumn({ name: 'co_usuario' })
+  leadsCreated: Usuarios;
+
+  @OneToMany(() => Usuarios, usuario => usuario.leadsEdited)
+  @JoinColumn({ name: 'co_usuario' })
+  leadsEdited: Usuarios;
+
+  @OneToMany(() => GrupoUsuario, (gu) => gu.coUsuario)
+  GruposUsuarios: GrupoUsuario[];
 
 }

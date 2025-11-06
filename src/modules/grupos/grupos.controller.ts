@@ -4,6 +4,7 @@ import {
     UseFilters,
     HttpStatus,
     Req,
+    Param,
   } from '@nestjs/common';
   import { ApiTags, ApiOperation} from '@nestjs/swagger';
   import { GruposService } from './grupos.service';
@@ -29,6 +30,19 @@ import {
         timestamp: getGMT3Timestamp(),
         path: request.url,
         data: grupos,
+      };
+    }
+
+    @Get(':coGrupo')
+    @ApiOperation({ summary: 'Obtém um Grupo por ID' })
+    async obterPorId(@Req() request: Request, @Param('coGrupo') id: number): Promise<ResponseDto<Grupos>> {
+      const grupo = await this.gruposService.obterGrupoPorId(id);
+      return {
+        statusCode: HttpStatus.OK,
+        message: 'Grupo obtido com sucesso',
+        timestamp: getGMT3Timestamp(),
+        path: request.url,
+        data: grupo,
       };
     }
   }

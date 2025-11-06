@@ -3,7 +3,8 @@ import {
   Get,
   UseFilters,
   HttpStatus,
-  Req
+  Req,
+  Param,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { UsuariosService } from './usuarios.service';
@@ -29,6 +30,19 @@ export class UsuariosController {
       timestamp: getGMT3Timestamp(),
       path: request.url,
       data: usuarios
+    };
+  }
+
+  @Get(':coUsuario')
+  @ApiOperation({ summary: 'Obtém um Usuário por ID' })
+  async obterPorId(@Req() request: Request, @Param('coUsuario') id: number): Promise<ResponseDto<Usuarios>> {
+    const usuario = await this.usuariosService.obterUsuarioPorId(id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Usuário obtido com sucesso',
+      timestamp: getGMT3Timestamp(),
+      path: request.url,
+      data: usuario,
     };
   }
 

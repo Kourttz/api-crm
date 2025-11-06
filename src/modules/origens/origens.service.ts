@@ -20,6 +20,25 @@ export class OrigensService {
 
   /**
    * 
+   * @param id ID da origem a ser obtida
+   * @returns 
+   */
+  async obterOrigemPorId(id: number): Promise<Origens> {
+    const origem = await this.origensRepository.findOneBy({ coOrigem: id });
+
+    /* Verifica se a origem foi encontrada */
+    if (!origem) {
+      throw new HttpException(
+        'Origem não encontrada',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return origem;
+  }
+
+  /**
+   * 
    * @param dados Dados para criar uma nova origem
    * @returns 
    */   

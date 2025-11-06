@@ -12,10 +12,29 @@ export class ContatosService {
   ) {}
 
   /**
-   * * @returns Lista todas as ações
+   * * @returns Lista todas os contatos
    */
   async listarContatos(): Promise<Contatos[]> {
     return this.contatosRepository.find();
+  }
+
+  /**
+   * * @param id ID do contato a ser obtido
+   * * @returns 
+   */
+  async obterContatoPorId(id: number): Promise<Contatos> {
+    
+    const contato = await this.contatosRepository.findOneBy({ coContato: id });
+
+    /* Verifica se o contato foi encontrado */
+    if (!contato) {
+      throw new HttpException(
+        'Contato não encontrado',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return contato;
   }
 
   /**
